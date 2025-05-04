@@ -9,7 +9,7 @@ using SKLAD.Entities;
 using Microsoft.OpenApi.Models;
 using SKLAD.BackgroundServices;
 
-// о боже упаси
+// Рѕ Р±РѕР¶Рµ СѓРїР°СЃРё
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<AuthService>();
@@ -20,7 +20,7 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Warehouse API", Version = "v1" });
 
-    // Добавьте JWT-авторизацию в Swagger
+    // Р”РѕР±Р°РІСЊС‚Рµ JWT-Р°РІС‚РѕСЂРёР·Р°С†РёСЋ РІ Swagger
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = "JWT Authorization header using the Bearer scheme",
@@ -47,7 +47,7 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-//builder.Services.AddHostedService<ReplenishmentService>(); // как и говорил идея отвалилась почти сразу)
+//builder.Services.AddHostedService<ReplenishmentService>(); // РєР°Рє Рё РіРѕРІРѕСЂРёР» РёРґРµСЏ РѕС‚РІР°Р»РёР»Р°СЃСЊ РїРѕС‡С‚Рё СЃСЂР°Р·Сѓ)
 builder.Services.AddHostedService<InventoryService>();
 builder.Services.AddScoped<QuestService>();
 builder.Services.AddScoped<AuditQuestGenerator>();
@@ -114,7 +114,7 @@ using (var scope = app.Services.CreateScope())
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<ApplicationRole>>();
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
-    // роль
+    // СЂРѕР»СЊ
     if (!await roleManager.RoleExistsAsync("Admin"))
     {
         await roleManager.CreateAsync(new ApplicationRole
@@ -140,7 +140,7 @@ using (var scope = app.Services.CreateScope())
         });
     }
 
-    // админка
+    // Р°РґРјРёРЅРєР°
     var adminUser = await userManager.FindByEmailAsync("admin@warehouse.com");
     if (adminUser == null)
     {
