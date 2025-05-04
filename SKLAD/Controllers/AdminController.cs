@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SKLAD.BackgroundServices;
 using SKLAD.Database;
+using SKLAD.Services;
 
 namespace SKLAD.Controllers
 {
@@ -10,22 +11,18 @@ namespace SKLAD.Controllers
     [Route("api/[controller]")]
     public class AdminController: ControllerBase
     {
-        private readonly IServiceProvider _serviceProvider;
-        public AdminController(IServiceProvider serviceProvider)
+        private readonly AdminService _adminService;
+        public AdminController(AdminService adminService)
         {
-            _serviceProvider = serviceProvider;
+            _adminService = adminService;
         }
 
         [Authorize(Roles = "Admin")]
         [HttpPost("inventory/start")]
         public async Task<IActionResult> StartInventory()
         {
-            using var scope = _serviceProvider.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<WarehouseDbContext>();
-
-            await new InventoryService(_serviceProvider, null!)
-                .CheckDiscrepancies(context, CancellationToken.None);
-
+            CancellationTokenSource token = new CancellationTokenSource();
+            await _adminService.CheckDiscrepancies(token.Token);
             return Ok("Инвентаризация запущена");
         }
     }

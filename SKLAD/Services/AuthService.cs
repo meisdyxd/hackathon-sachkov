@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using SKLAD.Dto;
 using SKLAD.Entities;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -13,14 +15,43 @@ namespace SKLAD.Services
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IConfiguration _config;
 
-        public AuthService(
-            UserManager<ApplicationUser> userManager,
-            IConfiguration config)
+        public AuthService(UserManager<ApplicationUser> userManager, IConfiguration config)
         {
             _userManager = userManager;
             _config = config;
         }
+        public async Task<ApplicationUser> Register(UserRegisterDto dto)
+        {
+            var user = new ApplicationUser
+            {
+                UserName = dto.Email,
+                Email = dto.Email,
+                FirstName = dto.FirstName,
+                LastName = dto.LastName
+            };
 
+            var result = await _userManager.CreateAsync(user, dto.Password);
+
+            if (!result.Succeeded)
+                throw new Exception("все плохо");
+
+            // не знаю как правильно сделать с ролями, хотел по твоему видосу, но сложно для меня показалось
+            await _userManager.AddToRoleAsync(user, "User");
+            return user;
+        }
+        public async Task<string> Login(UserLoginDto dto)
+        {
+            var user = await _userManager.FindByEmailAsync(dto.Email);
+            if (user == null)
+                throw new Exception("нет пользователя");
+
+            var isValidPassword = await _userManager.CheckPasswordAsync(user, dto.Password);
+            if (!isValidPassword)
+                throw new Exception("пароль инвалид");
+
+            var token = await GenerateJwtToken(user);
+            return token;
+        }
         public async Task<string> GenerateJwtToken(ApplicationUser user)
         {
             var claims = new List<Claim>

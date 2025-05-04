@@ -56,7 +56,10 @@ builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<PlacementService>();
 builder.Services.AddScoped<WarehouseService>();
 builder.Services.AddScoped<StorageZoneService>();
+builder.Services.AddScoped<AdminService>();
+builder.Services.AddScoped<OrderService>();
 builder.Services.AddScoped<ProductTransferService>();
+builder.Services.AddScoped<ReportsService>();
 builder.Services.AddDbContext<WarehouseDbContext>(options => {
     options.UseNpgsql(builder.Configuration.GetConnectionString("Postgresql"));
     });
