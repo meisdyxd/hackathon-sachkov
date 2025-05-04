@@ -123,6 +123,22 @@ using (var scope = app.Services.CreateScope())
             Description = "Full access"
         });
     }
+    if (!await roleManager.RoleExistsAsync("User"))
+    {
+        await roleManager.CreateAsync(new ApplicationRole
+        {
+            Name = "User",
+            Description = "Mini access"
+        });
+    }
+    if (!await roleManager.RoleExistsAsync("Manager"))
+    {
+        await roleManager.CreateAsync(new ApplicationRole
+        {
+            Name = "Manager",
+            Description = "Medium access"
+        });
+    }
 
     // админка
     var adminUser = await userManager.FindByEmailAsync("admin@warehouse.com");
